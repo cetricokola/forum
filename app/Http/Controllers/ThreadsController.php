@@ -11,7 +11,7 @@ class ThreadsController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth')->except(['index','show']);
+        $this->middleware('auth')->except(['index', 'show']);
     }
 
     /**
@@ -32,7 +32,7 @@ class ThreadsController extends Controller
      */
     public function create()
     {
-       return view('threads.create');
+        return view('threads.create');
     }
 
     /**
@@ -43,6 +43,11 @@ class ThreadsController extends Controller
      */
     public function store(Request $request)
     {
+        $this->validate($request, [
+            'title' => 'required',
+            'body' => 'required',
+            'channel_id' => 'required|exists:channels, id'
+        ]);
         $thread = Thread::create([
             'user_id' => Auth::id(),
             'channel_id' => request('channel_id'),
