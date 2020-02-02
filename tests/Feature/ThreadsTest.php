@@ -38,4 +38,16 @@ class ThreadsTest extends TestCase
             ->assertSee($reply->body);
 
     }
+
+    public function test_a_thread_belongs_to_a_channel()
+    {
+        $thread = create('App\Thread');
+        $this->assertInstanceOf('App\Channel', $thread->channel);
+    }
+
+    public function test_a_thread_can_make_string_path()
+    {
+        $thread = create('App\Thread');
+        $this->assertEquals("/threads/{$thread->channel->slug}/{$thread->id}", $thread->path());
+    }
 }
