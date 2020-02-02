@@ -65,10 +65,23 @@ class ReadThreadsTest extends TestCase
     {
 
         $this->signIn(create('App\User', ['name' => 'JohnDoe']));
-        $threadByJohnDoe =  create('App\Thread', ['user_id' => auth()->id()]);
-        $threadNotByJohnDoe =  create('App\Thread');
+        $threadByJohnDoe = create('App\Thread', ['user_id' => auth()->id()]);
+        $threadNotByJohnDoe = create('App\Thread');
         $this->get('threads?by=JohnDoe')
             ->assertSee($threadByJohnDoe->title)
             ->assertDontSee($threadNotByJohnDoe->title);
+    }
+
+    public function test_a_user_can_filter_threads_according_to_popularity()
+    {
+        $threadsWithTwoReplies = create('App\Thread');
+        create('App\Reply', ['thread_id' => $threadsWithTwoReplies], 2);
+
+        $threadsWithThreeReplies = create('App\Thread');
+        create('App\Reply', ['thread_id' => $threadsWithThreeReplies], 3);
+
+        $threadWithNoReply = $this->thread;
+        $response = $this->getJson('threads?popular=1')->json();
+        $this->assertEquals([3, 2, 0], array_column($response, 'replies_count'));
     }
 }
