@@ -9,4 +9,7 @@ class Reply extends Model
     protected $fillable = [
         'user_id', 'thread_id', 'body',
     ];
+    public function owner(){
+        return $this->belongsTo('App\User', 'user_id');
+    }
 }
