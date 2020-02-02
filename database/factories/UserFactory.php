@@ -4,6 +4,7 @@
 
 use App\User;
 use App\Thread;
+use App\Reply;
 use Faker\Generator as Faker;
 use Illuminate\Support\Str;
 
@@ -38,7 +39,7 @@ $factory->define(Thread::class, function (Faker $faker) {
     ];
 });
 
-$factory->define(\App\Reply::class, function (Faker $faker) {
+$factory->define(Reply::class, function (Faker $faker) {
     return [
         'thread_id' => function () {
             return factory('App\Thread')->create()->id;

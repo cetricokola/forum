@@ -11,6 +11,11 @@
 |
 */
 
+/*
+ *  $threads->each(function($thread){factory('App\Reply', 10)->create(['thread_id' =>$thread->id]);});
+
+ */
+
 Route::get('/', function () {
     return view('welcome');
 });
