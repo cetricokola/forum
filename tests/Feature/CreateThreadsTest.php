@@ -24,8 +24,10 @@ class CreateThreadsTest extends TestCase
     public function test_guest_cannot_create_thread()
     {
         $this->withExceptionHandling();
+
         $this->get('/threads/create')
             ->assertRedirect('/login');
+
         $this->post('/threads')
             ->assertRedirect('/login');
     }
@@ -35,6 +37,7 @@ class CreateThreadsTest extends TestCase
         $this->publishThread(['title' => null])
             ->assertSessionHasErrors('title');
     }
+
     public function test_a_thread_requires_a_body()
     {
         $this->publishThread(['body' => null])
