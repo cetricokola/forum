@@ -3,9 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use ReflectionClass;
 
 class Thread extends Model
 {
+    use RecordActivity;
+
     protected $fillable = [
         'channel_id', 'user_id', 'title', 'body',
     ];
@@ -17,40 +20,49 @@ class Thread extends Model
         static::addGlobalScope('replyCount', function ($builder) {
             $builder->withCount('replies');
         });
-        static::deleting(function ($thread){
+        static::deleting(function ($thread) {
             $thread->replies()->delete();
         });
+
     }
 
-    public function path()
+    public
+    function path()
     {
         return "/threads/{$this->channel->slug}/{$this->id}";
     }
 
-    public function replies()
+    public
+    function replies()
     {
         return $this->hasMany(Reply::class)
             ->withCount('favorites')
             ->with('owner');
     }
 
-    public function creator()
+    public
+    function creator()
     {
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function channel()
+    public
+    function channel()
     {
         return $this->belongsTo('App\Channel', 'channel_id');
     }
 
-    public function addReply($reply)
+    public
+    function addReply($reply)
     {
         $this->replies()->create($reply);
     }
 
-    public function scopeFilter($query, $filters)
+    public
+    function scopeFilter($query, $filters)
     {
         return $filters->apply($query);
     }
+
+
 }
