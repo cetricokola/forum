@@ -6,8 +6,18 @@
             <div class="col-md-8">
                 <div class="card">
                     <div class="card-header">
-                        <a href="{{route('profile', $thread->creator)}}">{{$thread->creator->name}}</a> posted:
-                        {{$thread->title}}</div>
+                        <div class="level">
+                            <span>
+ <a href="{{route('profile', $thread->creator)}}">{{$thread->creator->name}}</a> posted:
+                            {{$thread->title}}
+                                </span>
+                            <form action="{{$thread->path()}}" method="POST">
+                                {{csrf_field()}}
+                                {{method_field('DELETE')}}
+                                <button type="submit" class="btn btn-danger">Delete Thread</button>
+                            </form>
+                        </div>
+                    </div>
                     <div class="card-body">
                         <div class="body">
                             {{$thread->body}}
@@ -38,7 +48,8 @@
                     <div class="card-body">
                         <div class="body">
                             <p>
-                                This thread was published {{$thread->created_at->diffForHumans()}} by <a href="#">{{$thread->creator->name}}</a>, and currently has
+                                This thread was published {{$thread->created_at->diffForHumans()}} by <a
+                                    href="#">{{$thread->creator->name}}</a>, and currently has
                                 {{$thread->replies_count}} {{str_plural('comment', $thread->replies_count)}}.
                             </p>
                         </div>
