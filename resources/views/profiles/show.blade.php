@@ -7,7 +7,7 @@
                     <div class="card-header"> {{$profilesUser->name}}</div>
                     <div class="card-body">
                         <small>Since {{$profilesUser->created_at->diffForHumans()}}</small>
-                        @foreach($activities as $date => $activity)
+                        @forelse ($activities as $date => $activity)
                             <h3 class="page-header">{{$date}}</h3>
                             @foreach($activity as $record)
                                 <div class="level">
@@ -18,7 +18,9 @@
                                         </span>
                                 </div>
                             @endforeach
-                        @endforeach
+                        @empty
+                            <p>There is no activity for this user yet.</p>
+                        @endforelse
                     </div>
                 </div>
             </div>
