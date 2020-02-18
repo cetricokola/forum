@@ -12,7 +12,9 @@
                             @foreach($activity as $record)
                                 <div class="level">
                                     <span class="flex">
-                                         @include("profiles.activities.{$record->type }", ['activity' => $record])
+                                        @if (view()->exists("profiles.activities.{$record->type}"))
+                                            @include ("profiles.activities.{$record->type}", ['activity' => $record])
+                                        @endif
                                         </span>
                                 </div>
                             @endforeach

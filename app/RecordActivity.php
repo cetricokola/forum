@@ -1,35 +1,68 @@
 <?php
 
-
 namespace App;
 
 
-use ReflectionClass;
-
 trait RecordActivity
 {
-
-    protected static function bootRecordActivity()
+    /**
+     * Boot the trait.
+     */
+    protected static function bootRecordsActivity()
     {
         if (auth()->guest()) return;
-        static::created(function ($thread) {
-            $thread->recordActivity('created');
-        });
+
+        foreach (static::getActivitiesToRecord() as $event) {
+            static::$event(function ($model) use ($event) {
+                $model->recordActivity($event);
+            });
+        }
     }
 
+    /**
+     * Fetch all model events that require activity recording.
+     *
+     * @return array
+     */
+    protected static function getActivitiesToRecord()
+    {
+        return ['created'];
+    }
+
+    /**
+     * Record new activity for the model.
+     *
+     * @param string $event
+     */
     protected function recordActivity($event)
     {
-        Activity::create([
+        $this->activity()->create([
             'user_id' => auth()->id(),
-            'type' => $this->getStr($event),
-            'subject_id' => $this->id,
-            'subject_type' => get_class($this),
+            'type' => $this->getActivityType($event)
         ]);
     }
 
-    protected function getStr($event): string
+    /**
+     * Fetch the activity relationship.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function activity()
     {
-        return $event . '_' . strtolower((new ReflectionClass($this))->getShortName());
+        return $this->morphMany('App\Activity', 'subject');
     }
 
+    /**
+     * Determine the activity type.
+     *
+     * @param string $event
+     * @return string
+     * @throws \ReflectionException
+     */
+    protected function getActivityType($event)
+    {
+        $type = strtolower((new \ReflectionClass($this))->getShortName());
+
+        return "{$event}_{$type}";
+    }
 }
