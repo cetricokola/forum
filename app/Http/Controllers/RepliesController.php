@@ -22,6 +22,6 @@ class RepliesController extends Controller
         $thread->addReply([
         'body' => \request('body'),
         'user_id' => Auth::id()]);
-        return back();
+        return back()->with('flash', 'Your reply has been left.');
     }
 }
