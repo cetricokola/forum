@@ -30,14 +30,6 @@ class ReadThreadsTest extends TestCase
             ->assertSee($this->thread->title);
     }
 
-    public function test_a_user_can_read_replies_associated_to_a_thread()
-    {
-        $reply = factory('App\Reply')
-            ->create(['thread_id' => $this->thread->id]);
-        $this->get($this->thread->path())
-            ->assertSee($reply->body);
-
-    }
 
     public function test_a_thread_belongs_to_a_channel()
     {
@@ -94,5 +86,15 @@ class ReadThreadsTest extends TestCase
 
         $this->assertCount(2, $response['data']);
         $this->assertEquals(2, $response['total']);
+    }
+
+    function test_a_user_can_filter_threads_by_those_that_are_unanswered()
+    {
+        $thread = create('App\Thread');
+        create('App\Reply', ['thread_id' => $thread->id]);
+
+        $response = $this->getJson('threads?unanswered=1')->json();
+
+        $this->assertCount(1, $response);
     }
 }
