@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Channel;
+use App\Inspections\Spam;
 use App\Thread;
 use App\Filters\ThreadFilters;
 use App\User;
@@ -50,17 +51,17 @@ class ThreadsController extends Controller
      *
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request, Thread $thread)
+    public function store(Request $request, Spam $spam)
     {
-        if (auth()->check()) {
-            auth()->user()->read($thread);
-        }
+
         $this->validate($request, [
             'title' => 'required',
             'body' => 'required',
             'channel_id' => 'required|exists:channels,id'
         ]);
+        $spam->detect(request('body'));
         $thread = Thread::create([
             'user_id' => Auth::id(),
             'channel_id' => request('channel_id'),
@@ -79,11 +80,9 @@ class ThreadsController extends Controller
      */
     public function show($channelId, Thread $thread)
     {
-//        return view('threads.show', [
-//            'thread' => $thread,
-//            'replies' => $thread->replies()->paginate(25)
-//        ]);
-
+        if (auth()->check()) {
+            auth()->user()->read($thread);
+        }
         return view('threads.show', compact('thread'));
     }
 

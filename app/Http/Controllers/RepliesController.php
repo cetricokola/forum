@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Inspections\Spam;
 use App\Reply;
 use App\Thread;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 
 class RepliesController extends Controller
 
@@ -21,12 +23,9 @@ class RepliesController extends Controller
         return $thread->replies()->paginate(20);
     }
 
-    public function store($channelId, Thread $thread, Spam $spam)
+    public function store($channelId, Thread $thread)
     {
-        $this->validate(request(), [
-            'body' => 'required'
-        ]);
-        $spam->detect(request('body'));
+        $this->validateReply();
         $reply = $thread->addReply([
             'body' => \request('body'),
             'user_id' => Auth::id()]);
@@ -45,7 +44,7 @@ class RepliesController extends Controller
     {
         $this->authorize('update', $reply);
 
-        $this->validate(request(), ['body' => 'required']);
+        $this->validateReply();
 
         $reply->update(request(['body']));
     }
@@ -58,7 +57,6 @@ class RepliesController extends Controller
         } catch (AuthorizationException $e) {
         }
 
-
         try {
             $reply->delete();
         } catch (\Exception $e) {
@@ -67,5 +65,15 @@ class RepliesController extends Controller
             return response(['status' => 'Reply deleted']);
         }
         return back();
+    }
+
+    protected function validateReply()
+    {
+        try {
+            $this->validate(request(), ['body' => 'required']);
+        } catch (ValidationException $e) {
+        }
+
+        resolve(Spam::class)->detect(request('body'));
     }
 }
