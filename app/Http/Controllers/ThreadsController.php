@@ -51,8 +51,11 @@ class ThreadsController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function store(Request $request)
+    public function store(Request $request, Thread $thread)
     {
+        if (auth()->check()) {
+            auth()->user()->read($thread);
+        }
         $this->validate($request, [
             'title' => 'required',
             'body' => 'required',
@@ -80,6 +83,7 @@ class ThreadsController extends Controller
 //            'thread' => $thread,
 //            'replies' => $thread->replies()->paginate(25)
 //        ]);
+
         return view('threads.show', compact('thread'));
     }
 
