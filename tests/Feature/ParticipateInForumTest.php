@@ -78,7 +78,7 @@ class ParticipateInForumTest extends TestCase
 
         $this->signIn()
             ->patch("/replies/{$reply->id}")
-            ->assertStatus(403);
+            ->assertStatus(422);
     }
 
     /** @test */
@@ -96,6 +96,7 @@ class ParticipateInForumTest extends TestCase
 
     function test_replies_that_contain_spam_may_not_be_created()
     {
+        $this->withExceptionHandling();
         $this->signIn();
 
         $thread = create('App\Thread');
@@ -103,15 +104,14 @@ class ParticipateInForumTest extends TestCase
             'body' => 'Yahoo Customer Support'
         ]);
 
-        $this->post($thread->path() . '/replies', $reply->toArray())
+        $this->json('post', $thread->path() . '/replies', $reply->toArray())
             ->assertStatus(422);
     }
 
-
     function test_users_may_only_reply_a_maximum_of_once_per_minute()
     {
+        $this->withExceptionHandling();
         $this->signIn();
-
         $thread = create('App\Thread');
         $reply = make('App\Reply');
 
