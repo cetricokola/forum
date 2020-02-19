@@ -53,15 +53,13 @@ class ThreadsController extends Controller
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request, Spam $spam)
-    {
+    public function store(Request $request)    {
 
         $this->validate($request, [
-            'title' => 'required',
-            'body' => 'required',
+            'title' => 'required|spamfree',
+            'body' => 'required|spamfree',
             'channel_id' => 'required|exists:channels,id'
         ]);
-        $spam->detect(request('body'));
         $thread = Thread::create([
             'user_id' => Auth::id(),
             'channel_id' => request('channel_id'),
