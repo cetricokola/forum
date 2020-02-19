@@ -12,6 +12,12 @@ abstract class Filters
     protected $request, $builder;
     protected $filters = [];
 
+    /**
+     * Apply the filters.
+     *
+     *
+     * @param Request $request
+     */
     public function __construct(Request $request)
     {
         $this->request = $request;

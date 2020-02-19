@@ -12,7 +12,10 @@ class Thread extends Model
     protected $fillable = [
         'channel_id', 'user_id', 'title', 'body',
     ];
+    protected $with = ['creator', 'channel'];
+
     protected $guarded = [];
+    protected $appends = ['isSubscribedTo'];
 
     public static function boot()
     {
@@ -63,4 +66,46 @@ class Thread extends Model
         return $filters->apply($query);
     }
 
+    /**
+     * @param int|null $userId
+     */
+    public function subscribe($userId = null)
+    {
+        $this->subscriptions()->create([
+            'user_id' => $userId ?: auth()->id()
+        ]);
+    }
+
+    /**
+
+     *
+     * @param int|null $userId
+     */
+    public function unsubscribe($userId = null)
+    {
+        $this->subscriptions()
+            ->where('user_id', $userId ?: auth()->id())
+            ->delete();
+    }
+
+    /**
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function subscriptions()
+    {
+        return $this->hasMany(ThreadSubscription::class);
+    }
+
+    /**
+     * .
+     *
+     * @return boolean
+     */
+    public function getIsSubscribedToAttribute()
+    {
+        return $this->subscriptions()
+            ->where('user_id', auth()->id())
+            ->exists();
+    }
 }
