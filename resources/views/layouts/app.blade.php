@@ -10,14 +10,6 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
-    <script>
-        window.App = {!! json_encode([
-            'csrfToken' => csrf_token(),
-            'user' => Auth::user(),
-            'signedIn' => Auth::check()
-        ]) !!};
-    </script>
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
 
@@ -30,6 +22,7 @@
         .mr-1 { margin-right: 1em; }
         [v-cloak] { display: none; }
     </style>
+    @yield('head')
 </head>
 <body class="pb-5">
 <div id="app">
@@ -40,5 +33,14 @@
         <flash message="{{ session('flash') }}"></flash>
     </main>
 </div>
+<script src="{{ asset('js/app.js') }}" defer></script>
+@yield('scripts')
+<script>
+    window.App = {!! json_encode([
+            'csrfToken' => csrf_token(),
+            'user' => Auth::user(),
+            'signedIn' => Auth::check()
+        ]) !!};
+</script>
 </body>
 </html>
