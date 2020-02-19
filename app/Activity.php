@@ -12,7 +12,11 @@ class Activity extends Model
         'user_id',
         'subject_id',
         'subject_type'];
-
+    /**
+     * Fetch the associated subject for the activity.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphTo
+     */
     public function subject()
     {
         return $this->morphTo();
