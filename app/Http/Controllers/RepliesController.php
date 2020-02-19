@@ -22,10 +22,11 @@ class RepliesController extends Controller
             'body' => 'required'
         ]);
         $thread->addReply([
-        'body' => \request('body'),
-        'user_id' => Auth::id()]);
+            'body' => \request('body'),
+            'user_id' => Auth::id()]);
         return back()->with('flash', 'Your reply has been left.');
     }
+
     /**
      * Update an existing reply.
      *
@@ -39,18 +40,23 @@ class RepliesController extends Controller
 
         $reply->update(request(['body']));
     }
+
     public function destroy(Reply $reply)
     {
+
         try {
             $this->authorize('update', $reply);
         } catch (AuthorizationException $e) {
         }
 
+
         try {
             $reply->delete();
         } catch (\Exception $e) {
         }
-
+        if (request()->expectsJson()) {
+            return response(['status' => 'Reply deleted']);
+        }
         return back();
     }
 }
