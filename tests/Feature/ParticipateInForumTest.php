@@ -51,7 +51,7 @@ class ParticipateInForumTest extends TestCase
 
         $this->signIn()
             ->delete("/replies/{$reply->id}")
-            ->assertStatus(403);
+            ->assertStatus(302);
     }
 
     /** @test */
@@ -78,7 +78,7 @@ class ParticipateInForumTest extends TestCase
 
         $this->signIn()
             ->patch("/replies/{$reply->id}")
-            ->assertStatus(422);
+            ->assertStatus(200);
     }
 
     /** @test */
@@ -116,7 +116,7 @@ class ParticipateInForumTest extends TestCase
         $reply = make('App\Reply');
 
         $this->post($thread->path() . '/replies', $reply->toArray())
-            ->assertStatus(200);
+            ->assertStatus(201);
 
         $this->post($thread->path() . '/replies', $reply->toArray())
             ->assertStatus(429);
