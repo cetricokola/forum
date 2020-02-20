@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use App\Reply;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
@@ -27,10 +28,22 @@ class ReplyTest extends TestCase
     }
     function test_it_can_detect_all_mentioned_users_in_the_body()
     {
-        $reply = create('App\Reply', [
+        $reply = new Reply([
             'body' => '@Cetric wants to talk to @Cetric'
         ]);
 
         $this->assertEquals(['Cetric', 'Cetric'], $reply->mentionedUsers());
+    }
+    function test_it_wraps_mentioned_usernames_in_the_body_within_anchor_tags()
+    {
+        $reply = new Reply([
+            'body' => 'Hello @Cetric.'
+        ]);
+
+        $this->assertEquals(
+            'Hello <a href="/profiles/Cetric">@Cetric</a>.',
+            $reply->body
+        );
+
     }
 }
