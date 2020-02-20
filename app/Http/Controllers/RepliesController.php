@@ -8,6 +8,7 @@ use App\Thread;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\ValidationException;
 
 class RepliesController extends Controller
@@ -25,6 +26,11 @@ class RepliesController extends Controller
 
     public function store($channelId, Thread $thread)
     {
+        if (Gate::denies('create', new Reply)) {
+            return response(
+                'You are posting too frequently. Please take a break. :)', 429
+            );
+        }
         try {
             $this->validate(request(), ['body' => 'required|spamfree']);
 
@@ -57,7 +63,6 @@ class RepliesController extends Controller
                 'Sorry, your reply could not be saved at this time.', 422
             );
         }
-
     }
 
     public function destroy(Reply $reply)
