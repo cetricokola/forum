@@ -25,4 +25,12 @@ class ReplyTest extends TestCase
 
         $this->assertFalse($reply->wasJustPublished());
     }
+    function test_it_can_detect_all_mentioned_users_in_the_body()
+    {
+        $reply = create('App\Reply', [
+            'body' => '@Cetric wants to talk to @Cetric'
+        ]);
+
+        $this->assertEquals(['Cetric', 'Cetric'], $reply->mentionedUsers());
+    }
 }
