@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreatePostRequest;
 use App\Inspections\Spam;
 use App\Reply;
 use App\Thread;
 use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\ValidationException;
+
 
 class RepliesController extends Controller
 
@@ -32,23 +31,14 @@ class RepliesController extends Controller
         ])->load('owner');
     }
 
-
     public function update(Reply $reply)
     {
         try {
-            $this->authorize('update', $reply);
-        } catch (AuthorizationException $e) {
-        }
-
-        try {
             $this->validate(request(), ['body' => 'required|spamfree']);
-
-            $reply->update(request(['body']));
-        } catch (\Exception $e) {
-            return response(
-                'Sorry, your reply could not be saved at this time.', 422
-            );
+        } catch (ValidationException $e) {
         }
+
+        $reply->update(request(['body']));
     }
 
     public function destroy(Reply $reply)
