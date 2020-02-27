@@ -67278,9 +67278,10 @@ var render = function() {
       _vm.canUpdate
         ? _c("div", { staticClass: "panel-footer level" }, [
             _c(
-              "button",
+              "a",
               {
-                staticClass: "btn btn-xs mr-1",
+                staticClass: "mr-1",
+                attrs: { href: "" },
                 on: {
                   click: function($event) {
                     _vm.editing = true
@@ -67291,9 +67292,10 @@ var render = function() {
             ),
             _vm._v(" "),
             _c(
-              "button",
+              "a",
               {
-                staticClass: "btn btn-xs btn-danger mr-1",
+                staticClass: "text-danger ml-3 mr-1",
+                attrs: { href: "" },
                 on: { click: _vm.destroy }
               },
               [_vm._v("Delete")]

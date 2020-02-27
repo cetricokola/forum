@@ -1,90 +1,73 @@
-<nav class="navbar navbar-default">
+<nav class="navbar navbar-expand-lg navbar-light bg-white">
     <div class="container">
-        <div class="navbar-header">
+        <a class="navbar-brand" href="{{ url('/') }}">
+            {{ config('app.name', 'Forum') }}
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-            <!-- Collapsed Hamburger -->
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
-                    data-target="#app-navbar-collapse">
-                <span class="sr-only">Toggle Navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-
-            <!-- Branding Image -->
-            <a class="navbar-brand" href="{{ url('/') }}">
-                {{ config('app.name', 'Forum') }}
-            </a>
-        </div>
-
-        <div class="collapse navbar-collapse" id="app-navbar-collapse">
-            <!-- Left Side Of Navbar -->
-            <ul class="nav navbar-nav">
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                       aria-expanded="false">Browse <span class="caret"></span></a>
-
-                    <ul class="dropdown-menu">
-                        <li><a href="/threads">All Threads</a></li>
-
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        Browse
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a href="/threads" class="dropdown-item">All Threads</a>
                         @if (auth()->check())
-                            <li><a href="/threads?by={{ auth()->user()->name }}">My Threads</a></li>
+                            <a href="/threads?by={{ auth()->user()->name }}" class="dropdown-item">My Threads</a>
                         @endif
-
-                        <li><a href="/threads?popular=1">Popular Threads</a></li>
-                        <li><a href="/threads?unanswered=1">Unanswered Threads</a></li>
-                    </ul>
+                        <a href="/threads?popular=1" class="dropdown-item">Popular Threads</a>
+                        <a href="/threads?unanswered=1" class="dropdown-item">Unanswered Threads</a>
+                    </div>
                 </li>
-
-                <li>
-                    <a href="/threads/create">New Thread</a>
-                </li>
-
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                       aria-expanded="false">Channels <span class="caret"></span></a>
-
-                    <ul class="dropdown-menu">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        Channels
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                         @foreach ($channels as $channel)
-                            <li><a href="/threads/{{ $channel->slug }}">{{ $channel->name }}</a></li>
+                            <a href="/threads/{{ $channel->slug }}" class="dropdown-item">{{ $channel->name }}</a>
                         @endforeach
-                    </ul>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a href="/threads/create" class="nav-link">New Thread</a>
                 </li>
             </ul>
-
-            <!-- Right Side Of Navbar -->
-            <ul class="nav navbar-nav navbar-right">
-                <!-- Authentication Links -->
+            <ul class="nav navbar-nav">
                 @if (Auth::guest())
-                    <li><a href="{{ route('login') }}">Login</a></li>
-                    <li><a href="{{ route('register') }}">Register</a></li>
+                    <li class="nav-item"><a href="{{ route('login') }}" class="mr-5">Login</a></li>
+                    <li class="nav-item"><a href="{{ route('register') }}" class="btn-primary btn btn-sm">Register</a></li>
                 @else
                     <user-notifications></user-notifications>
-
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
-                           aria-expanded="false">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                           data-toggle="dropdown"
+                           aria-haspopup="true" aria-expanded="false">
                             {{ Auth::user()->name }} <span class="caret"></span>
                         </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
 
-                        <ul class="dropdown-menu" role="menu">
-                            <li>
-                                <a href="{{ route('profile', Auth::user()) }}">My Profile</a>
-                            </li>
+                            <a href="{{ route('profile', Auth::user()) }}" class="dropdown-item">My Profile</a>
 
-                            <li>
-                                <a href="{{ route('logout') }}"
-                                   onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                    Logout
-                                </a>
-
-                                <form id="logout-form" action="{{ route('logout') }}" method="POST"
-                                      style="display: none;">
-                                    {{ csrf_field() }}
-                                </form>
-                            </li>
-                        </ul>
+                            <a href="{{ route('logout') }}"
+                               onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();"
+                               class="dropdown-item">
+                                Logout
+                            </a>
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                  style="display: none;">
+                                {{ csrf_field() }}
+                            </form>
+                        </div>
                     </li>
                 @endif
             </ul>

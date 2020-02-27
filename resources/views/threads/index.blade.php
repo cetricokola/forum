@@ -3,15 +3,14 @@
 @section('content')
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header">Forum Threads</div>
-
-                    <div class="card-body">
-                        @foreach( $threads as $thread )
+            <div class="col-md-10">
+                <div class="h2">Forum Threads</div>
+                <div class="card-body">
+                    @foreach( $threads as $thread )
+                        <div class="card p-3 mb-3">
                             <article>
                                 <div class="level">
-                                    <h4 class="flex">
+                                    <h4 class="flex mb-3">
                                         <a href="{{$thread->path()}}">
                                             @if (auth()->check() && $thread->hasUpdatesFor(auth()->user()))
                                                 <strong>
@@ -28,8 +27,8 @@
                                     {{$thread->body}}
                                 </div>
                             </article>
-                        @endforeach
-                    </div>
+                        </div>
+                    @endforeach
                 </div>
             </div>
         </div>
