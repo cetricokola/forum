@@ -30,8 +30,8 @@
         </div>
 
         <div class="panel-footer level" v-if="canUpdate">
-            <button class="btn btn-xs mr-1" @click="editing = true">Edit</button>
-            <button class="btn btn-xs btn-danger mr-1" @click="destroy">Delete</button>
+            <a  href="" class="mr-1" @click="editing = true">Edit</a>
+            <a href="" class="text-danger ml-3 mr-1" @click="destroy">Delete</a>
         </div>
     </div>
 </template>
